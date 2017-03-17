@@ -1,7 +1,4 @@
-function [ v ] = boundary_vel_v( v )
-
-Nx = size(v,1);
-Ny = size(v,2);
+function [ v ] = boundary_vel_v(v,Nx,Ny)
 
 %at the north and south boundaries
 for i = 1 : Nx

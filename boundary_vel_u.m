@@ -1,7 +1,4 @@
-function [u] = boundary_vel_u(u)
-Nx = size(u,1);
-Ny = size(u,2);
-
+function [u] = boundary_vel_u(u,Nx,Ny)
 %at the north and south boundaries
 for i = 1 : Nx
     u(i,1)  = -u(i,2);

@@ -1,11 +1,13 @@
 function [u] = lid_bc_u(u,Nx,Ny)
-    %at the north wall  
-    u(1,:) = 2*1 - u(2,:);
-    %at the south wall
-    u(Ny+2,:) = -u(Ny+1,:);
-    %at the west wall
-    u(:,Nx+1) = 0;
-    %at the east wall
-    u(:,1) = 0;
+%at the north and south boundaries
+for i = 1 : Nx+1
+    u(i,1)    =   -u(i,2)    ;
+    u(i,Ny+2) = 2 -u(i, Ny+1);
+end
+
+%at the east and west boundary
+for j = 2 : Ny+1
+    u(1,j)  = 0 ;
+    u(Nx+1,j) = 0;
 end
 

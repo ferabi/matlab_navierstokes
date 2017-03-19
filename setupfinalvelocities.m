@@ -1,18 +1,17 @@
-function [ U, V ] = setupfinalvelocities(U,V,ustar, vstar, pressure, dx, dy, dt,Nx,Ny)
+function [ U, V ] = setupfinalvelocities(U,V, ustar, vstar, pressure,Nx,Ny, dx, dy, dt)
 %gives the final velocities taking into consideration the pressure field
-%U = zeros(Ny+2, Nx+1);
-%V = zeros(Ny+1, Nx+2);
 
 for i = 2 : Nx
-    for j = 2: Ny+1
-        U(j,i) = ustar(j,i) - dt/dx * (pressure(j,i) - pressure(j,i-1));
+    for j = 2 : Ny+1
+        U(i,j) = ustar(i,j) - (dt/dx)*(pressure(i+1,j)- pressure(i,j)) ;  
     end
 end
 
 for i = 2 : Nx+1
-    for j = 2: Ny
-        V(j,i) = vstar(j,i) - dt/dy * (pressure(j,i) - pressure(j-1,i));
+    for j = 2 : Ny
+        V(i,j) = vstar(i,j) - (dt/dy)*(pressure(i,j+1)- pressure(i,j));
     end
 end
+
 end
 

@@ -30,8 +30,5 @@ for i = 2 : Nx+1
     end
 end
 
-%boundary conditions for ustar and vstar
-%Ustar = boundary_vel_u(Ustar);
-%Vstar = boundary_vel_v(Vstar);
 end
 

@@ -16,12 +16,12 @@ Nx = 40;
 Ny = 40;
 dx = (xmax - xmin)/Nx;
 dy = (ymax - ymin)/Ny;
-X = linspace(xmin,xmax,Nx+1);
-Y = linspace(ymin,ymax,Ny+1);
+X = linspace(xmin-dx,xmax+dx,Nx+2);
+Y = linspace(ymin-dy,ymax+dy,Ny+2);
 %time stuff that is required for time iterations
 dt = 0.00005;
 t = 0;
-tmax = 0.5;
+tmax = 0.005;
 
 %Reynolds number
 rey = 1;
@@ -52,40 +52,38 @@ p_av = zeros(Nx+1,Ny+1);
 time_steps = tmax/dt;
 
 %maximum iterations and tolerance
-maxiter = 200;
+maxiter = 2000;
 %tol = 1e-7;
 %vn(Nx+1,1:Ny+1 ) = 22;
 %going through the time steps:
- for n = 1 : 5000
+%defining mass conservation in each box
+maximum = zeros(Nx,Ny);
+ for n = 1:500
      %boundary conditions for pn, un, vn
-      pn = boundary_press(pn,Nx,Ny);
-      vn = boundary_vel_v(vn,Nx,Ny);
-      un = boundary_vel_u(un,Nx,Ny);
+     pn = boundary_press(pn,Nx,Ny);
+     vn = boundary_vel_v(vn,Nx,Ny);
+     un = boundary_vel_u(un,Nx,Ny);
      %boundary conditions for pn, un, vn lid driven cavity
-%       pn = lid_bc_p(pn,Nx,Ny);
-%       vn = lid_bc_v(vn,Nx,Ny);
-%       un = lid_bc_u(un,Nx,Ny);
-     
+%        pn = lid_bc_p(pn,Nx,Ny);
+%        vn = lid_bc_v(vn,Nx,Ny);
+%        un = lid_bc_u(un,Nx,Ny);
+      
+     [u_av, v_av, p_av] = at_nodevalues(un,vn,pn,Nx,Ny);
+     figure(1)
+     axis equal;
+     contourf(Y,Y,pn')   
      %calculating stuff
      [ustar, vstar] = setupinter_vel(ustar,vstar,un,vn,Nx,Ny,dx,dy,dt,rey);
-     pn1            = setuppressure(pn,ustar,vstar,Nx,Ny,dx,dy,dt, maxiter);
+     pn1            = setuppressure(pn1,pn,ustar,vstar,Nx,Ny,dx,dy,dt, maxiter);
      [un1, vn1]     = setupfinalvelocities(un1,vn1,ustar,vstar,pn1,Nx,Ny,dx,dy,dt); 
      
      %update stuff
      vn = vn1;
      un = un1;
      pn = pn1;
-     [u_av, v_av, p_av] = at_nodevalues(un1,vn1,pn1,Nx,Ny);
-     figure(1)
-     axis equal;
-     contour(X,Y,u_av',100)
-     figure(2)
-     axis equal;
-     contour(X,Y,v_av',100)
-     figure(3)
-     axis equal;
-     contour(X,Y,p_av',100)
+     maximum = mass_conservation(un1,vn1,dx,dy,Nx,Ny);
+     max(max(maximum))
      
-     pause(0.00001)
  end
+ 
      

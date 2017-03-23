@@ -1,7 +1,7 @@
 function [ v ] = boundary_vel_v( v, Nx, Ny)
 
 %at the north and south boundaries
-for i = 2 : Nx+1
+for i = 1 : Nx+2
     v(i,Ny+1)   = 0;
     v(i,1)      = 0;
 end
